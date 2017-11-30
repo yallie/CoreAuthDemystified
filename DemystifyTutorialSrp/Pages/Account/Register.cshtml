@@ -1,0 +1,45 @@
+﻿@page
+@*
+    This is a simple registration page.
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@functions
+{
+    [BindProperty]
+    public string UserName { get; set; }
+
+    [BindProperty]
+    public string Password { get; set; }
+
+    public IActionResult OnPost()
+    {
+        // redirect to the get handler of the current page
+        return RedirectToPage();
+    }
+}
+
+<h1>Register new user</h1>
+
+@UserName
+
+<form method="post" >
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="UserName" class="col-md-2 control-label">User name</label>
+        <div class="col-md-10">
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <label asp-for="Password" class="col-md-2 control-label">Password</label>
+        <div class="col-md-10">
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+    </div>
+</form>
