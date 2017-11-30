@@ -16,8 +16,24 @@
         // redirect to the get handler of the current page
         return RedirectToPage();
     }
-}
 
+    public class UserAccount
+    {
+        public string user { get; set; }
+        public string s { get; set; }
+        public string v { get; set; }
+    }
+
+    public IActionResult OnPostAddAccount(string user = null, string s = null, string v = null)
+    {
+        return RedirectToPage();
+    }
+
+    public IActionResult OnGetAddAccount(string user, string s, string v)
+    {
+        return RedirectToPage();
+    }
+}
 <h1>Register new user</h1>
 
 <form method="post" >
@@ -37,7 +53,9 @@
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="button" class="btn btn-primary"
+                onclick="$u.crypto.srp.AddAccount($.find('input#UserName')[0].value, $.find('input#Password')[0].value), function () { console.log('oops'); }">Register
+            </button>
         </div>
     </div>
 </form>

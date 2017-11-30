@@ -63,6 +63,15 @@
         <script src="~/js/srp/crypto.js"></script>
         <script src="~/js/srp/crypto-srp.js"></script>
         <script src="~/js/srp/misc.js"></script>
+        <script>
+            $(document).ready(function ()
+            {
+                $u.crypto.srp.initialize(
+                    "@srp4net.Helpers.Crypto.SRP.NHex",
+                    "@srp4net.Helpers.Crypto.SRP.gHex",
+                    "@srp4net.Helpers.Crypto.SRP.kHex");
+            });
+        </script>
     </environment>
     <environment exclude="Development">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"

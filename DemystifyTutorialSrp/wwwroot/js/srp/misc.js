@@ -57,3 +57,29 @@ function WS(fnServer, data, fnSuccess)
         }
     })
 }
+
+function PostData(localUrl, data, fnSuccess)
+{
+    $.ajax(
+    {
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        url: localUrl,
+        data: '{ "user":"u", "s":"s", "v":"v" }', //$.toJSON(data),
+        dataType: "json",
+
+        success: function(result) {
+        	console.log('Data received: ');
+        	console.log(result);
+            fnSuccess(msg.d);
+    	},
+
+        error: function(xhr, msg, error)
+        {
+            //var err = eval("(" + xhr.responseText + ")");
+            //$.log(err.Message + "\n" + err.StackTrace);
+            $.log(msg);
+            $.log(error);
+        }
+    });
+}

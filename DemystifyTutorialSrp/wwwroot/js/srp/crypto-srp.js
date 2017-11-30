@@ -40,6 +40,29 @@ $u.crypto.srp =
         return $u.crypto.hashHex(x);
     },
 
+    TestAddAccount: function(username, password, fnSuccess)
+    {
+    	alert('username: ' + username + ', password: ' + password);
+
+        // user = H(username)
+        var user = this.H("!@#<32}|{_$+)EW:>fWS@@!=39dje%^#$RF']]ew3" + username + "shaSHA@"); // some decorations to prevent attacks like the ones based on rainbow tables...
+    	username = '';
+    	alert('user: ' + user);
+
+        // pass = H(password)
+        var pass = this.H("\":}[\|weFC@de';{{3$$  vdRF2w^5V|\\/.w32" + password + "sshHAA!%"); // some decorations to prevent attacks like the ones based on rainbow tables...
+        password = '';
+    	alert('pass: ' + pass);
+
+        // s - user's salt
+        // s = random number
+        var s = randBigInt(this.Nbits, 0);
+    	alert('s: ' + s);
+
+        var shex = this.bigint2hex(s);
+    	alert('shex: ' + shex);
+    },
+
     AddAccount: function(username, password, fnSuccess)
     {
         // Creating a new account
@@ -75,8 +98,18 @@ $u.crypto.srp =
         // v = g^x (mod N)
         var v = powMod(this.g, x, this.N);
 
+        var data = {
+            user: user,
+            s: shex,
+            v: this.bigint2hex(v)
+        };
+
+        var json = $.toJSON(data);
+
+        alert('json: ' + json);
+
         // call the server's AddAccount method
-        WS("SRP/AddAccount", {
+        PostData("/Account/Register", { //"/Account/Register?handler=AddAccount"
             user: user,
             s: shex,
             v: this.bigint2hex(v)
