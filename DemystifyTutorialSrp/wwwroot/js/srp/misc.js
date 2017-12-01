@@ -58,15 +58,14 @@ function WS(fnServer, data, fnSuccess)
     })
 }
 
-function PostData(localUrl, data, fnSuccess)
-{
-    $.ajax(
-    {
-        type: "POST",
+function PostData(localUrl, data, token, fnSuccess) {
+    $.ajax({
+        type: "POST", // "GET" works, "POST" doesn't
         contentType: "application/json; charset=utf-8",
         url: localUrl,
-        data: '{ "user":"u", "s":"s", "v":"v" }', //$.toJSON(data),
+        data: $.toJSON(data), // '{ "user":"u", "s":"s", "v":"v" }',
         dataType: "json",
+        headers: { 'RequestVerificationToken': token },
 
         success: function(result) {
         	console.log('Data received: ');
@@ -74,8 +73,7 @@ function PostData(localUrl, data, fnSuccess)
             fnSuccess(msg.d);
     	},
 
-        error: function(xhr, msg, error)
-        {
+        error: function(xhr, msg, error) {
             //var err = eval("(" + xhr.responseText + ")");
             //$.log(err.Message + "\n" + err.StackTrace);
             $.log(msg);

@@ -11,7 +11,7 @@
     [BindProperty]
     public string Password { get; set; }
 
-    public IActionResult OnPost()
+    public IActionResult OnPost(string user = null, string s = null, string v = null)
     {
         // redirect to the get handler of the current page
         return RedirectToPage();
@@ -54,7 +54,11 @@
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <button type="button" class="btn btn-primary"
-                onclick="$u.crypto.srp.AddAccount($.find('input#UserName')[0].value, $.find('input#Password')[0].value), function () { console.log('oops'); }">Register
+                onclick="$u.crypto.srp.AddAccount(
+                    $.find('input#UserName')[0].value,
+                    $.find('input#Password')[0].value,
+                    $.find('input[name=\'__RequestVerificationToken\']')[0].value,
+                    function () { console.log('oops'); }); return false;">Register
             </button>
         </div>
     </div>

@@ -63,7 +63,7 @@ $u.crypto.srp =
     	alert('shex: ' + shex);
     },
 
-    AddAccount: function(username, password, fnSuccess)
+    AddAccount: function(username, password, token, fnSuccess)
     {
         // Creating a new account
         // username = the username entered in the interface
@@ -99,6 +99,7 @@ $u.crypto.srp =
         var v = powMod(this.g, x, this.N);
 
         var data = {
+            __RequestVerificationToken: token,
             user: user,
             s: shex,
             v: this.bigint2hex(v)
@@ -106,15 +107,10 @@ $u.crypto.srp =
 
         var json = $.toJSON(data);
 
-        alert('json: ' + json);
+        //alert('json: ' + json);
 
         // call the server's AddAccount method
-        PostData("/Account/Register", { //"/Account/Register?handler=AddAccount"
-            user: user,
-            s: shex,
-            v: this.bigint2hex(v)
-        }, function(result)
-        {
+        PostData("/Account/Register", data, token, function(result) {
             fnSuccess(result.error, result.data);
         });
     },
@@ -283,10 +279,10 @@ $u.crypto.srp =
 
         var user = 'user1';
         var password = 'sameverycomplexpassword';
-        
+
         $.log("INFO: Running the sample for account '" + user + "' and password '" + password + "'");
         $.log("INFO: We'll execute two steps: 1. we will create the account; 2. we will authenticate on that account");
-        
+
         $.log("Adding the account");
         this.AddAccount(user, password, function(error, result)
         {
