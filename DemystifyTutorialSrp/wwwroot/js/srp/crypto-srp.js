@@ -99,9 +99,9 @@ $u.crypto.srp =
         var v = powMod(this.g, x, this.N);
 
         var data = {
-            user: user,
-            s: shex,
-            v: this.bigint2hex(v)
+            UserHex: user,
+            SHex: shex,
+            VHex: this.bigint2hex(v)
         };
 
         var json = $.toJSON(data);

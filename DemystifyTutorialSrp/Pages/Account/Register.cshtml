@@ -11,17 +11,19 @@
     [BindProperty]
     public string Password { get; set; }
 
-    public IActionResult OnPost(UserAccount user = null)
+    public class UserInfo
+    {
+        public string UserHex { get; set; }
+
+        public string SHex { get; set; }
+
+        public string VHex { get; set; }
+    }
+
+    public IActionResult OnPost([FromBody] UserInfo userInfo)
     {
         // redirect to the get handler of the current page
         return RedirectToPage();
-    }
-
-    public class UserAccount
-    {
-        public string User { get; set; }
-        public string S { get; set; }
-        public string V { get; set; }
     }
 
     public IActionResult OnPostAddAccount(string user = null, string s = null, string v = null)
@@ -36,7 +38,8 @@
 }
 <h1>Register new user</h1>
 
-<form method="post" >
+@using (Html.BeginForm(FormMethod.Post))
+{
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="UserName" class="col-md-2 control-label">User name</label>
@@ -54,13 +57,49 @@
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <button type="button" class="btn btn-primary"
-                onclick="$u.crypto.srp.AddAccount(
+                    onclick="$u.crypto.srp.AddAccount(
+                                $.find('input#UserName')[0].value,
+                                $.find('input#Password')[0].value,
+                                $.find('input[name=\'__RequestVerificationToken\']')[0].value,
+                                function () { console.log('oops'); }); return false;">Register</button>
+        </div>
+    </div>
+}
+
+<!--
+
+<ul>
+    <li>User: UserHex</li>
+    <li>S: SHex</li>
+    <li>V: VHex</li>
+</ul>
+
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName" class="col-md-2 control-label">User name</label>
+                <div class="col-md-10">
+                    <input asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+
+                <label asp-for="Password" class="col-md-2 control-label">Password</label>
+                <div class="col-md-10">
+                    <input asp-for="Password" type="password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="button" class="btn btn-primary"
+                            onclick="$u.crypto.srp.AddAccount(
                     $.find('input#UserName')[0].value,
                     $.find('input#Password')[0].value,
                     $.find('input[name=\'__RequestVerificationToken\']')[0].value,
-                    function () { console.log('oops'); }); return false;">Register
-            </button>
-        </div>
-    </div>
-</form>
-
+                    function () { console.log('oops'); }); return false;">
+                        Register
+                    </button>
+                </div>
+            </div>
+        </form>
+-->

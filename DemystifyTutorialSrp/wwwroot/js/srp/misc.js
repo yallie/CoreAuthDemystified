@@ -68,10 +68,10 @@ function PostData(localUrl, data, token, fnSuccess) {
         headers: { 'RequestVerificationToken': token },
 
         success: function(result) {
-        	console.log('Data received: ');
-        	console.log(result);
+            console.log('Data received: ');
+            console.log(result);
             fnSuccess(msg.d);
-    	},
+        },
 
         error: function(xhr, msg, error) {
             //var err = eval("(" + xhr.responseText + ")");
