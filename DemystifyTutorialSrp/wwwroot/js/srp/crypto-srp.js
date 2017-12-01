@@ -99,7 +99,6 @@ $u.crypto.srp =
         var v = powMod(this.g, x, this.N);
 
         var data = {
-            __RequestVerificationToken: token,
             user: user,
             s: shex,
             v: this.bigint2hex(v)

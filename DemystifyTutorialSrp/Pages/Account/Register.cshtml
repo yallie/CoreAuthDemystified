@@ -11,7 +11,7 @@
     [BindProperty]
     public string Password { get; set; }
 
-    public IActionResult OnPost(string user = null, string s = null, string v = null)
+    public IActionResult OnPost(UserAccount user = null)
     {
         // redirect to the get handler of the current page
         return RedirectToPage();
@@ -19,9 +19,9 @@
 
     public class UserAccount
     {
-        public string user { get; set; }
-        public string s { get; set; }
-        public string v { get; set; }
+        public string User { get; set; }
+        public string S { get; set; }
+        public string V { get; set; }
     }
 
     public IActionResult OnPostAddAccount(string user = null, string s = null, string v = null)
