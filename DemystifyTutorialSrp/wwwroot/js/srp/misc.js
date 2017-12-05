@@ -70,27 +70,5 @@ function PostData(localUrl, data, token, complete) {
         success: function (data, status, xhr) {
             complete(data);
         }
-
-        /*,
-
-        complete: function (xhr, msg) {
-            alert(msg);
-            //complete(msg);
-        },
-
-        success: function () { // (data, status, xhr) {
-            document.write("PostData executed.");
-            ////alert('PostData!');
-            ////console.log('Data received: ');
-            ////console.log(data);
-            ////fnSuccess(data);
-        },
-
-        error: function(xhr, msg, error) {
-            //var err = eval("(" + xhr.responseText + ")");
-            //$.log(err.Message + "\n" + err.StackTrace);
-            $.log(msg);
-            $.log(error);
-        }*/
     });
 }

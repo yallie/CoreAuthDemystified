@@ -109,12 +109,7 @@ $u.crypto.srp =
         //alert('json: ' + json);
 
         // call the server's AddAccount method
-        PostData("/Account/Register", data, token, function (data) {
-            alert("PostData returns: " + $.toJSON(data));
-            if (data.redirect) {
-                window.location.href = data.redirect;
-            }
-        })
+        PostData("/Account/Register", data, token, fnSuccess);
     },
 
     Authenticate: function(username, password, fnSuccess)

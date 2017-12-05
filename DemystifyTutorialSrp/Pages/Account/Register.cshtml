@@ -20,6 +20,8 @@
             // redirect to the main page
             //return RedirectToPage("/Index");
             //return Content("{ 'msg': 'Ok' }");
+
+            // return JSON result so that the callback can decide what
             return new JsonResult(new { msg = "Ok", redirect = "/Index" });
         }
 
@@ -59,29 +61,11 @@
                                 $.find('input#Password')[0].value,
                                 $.find('input[name=\'__RequestVerificationToken\']')[0].value,
                                 function (data) {
-        alert(data);
-        console.log('oops');
-        //if (data) {
-        window.location.href = '/Index';
-        //}
-    }); return true;">Register</button>
+                                    alert('AddAccount returns: ' + $.toJSON(data));
+                                    if (data.redirect) {
+                                        window.location.href = data.redirect;
+                                    }
+                                }); return true;">Register</button>
         </div>
-
-        <button type="button" onclick="
-        var token = $.find('input[name=\'__RequestVerificationToken\']')[0].value;
-        var json = $.toJSON({ UserHex:'123', SHex:'321', VHex:'321123' });
-        $.ajax({
-        url: '/Account/Register',
-            type: 'POST',
-            contentType: 'application/json; charset=utf-8',
-            data: json,
-            dataType: 'json',
-            headers: { 'RequestVerificationToken': token },
-            complete: function () {
-            alert('complete!');
-        }
-    });
-        return false;
-    ">Click to post!</button>
     </div>
 }
