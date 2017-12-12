@@ -150,13 +150,17 @@ $u.crypto.srp =
             A = powMod(this.g, a, this.N);
             AHex = this.bigint2hex(A);
 
+            // copy the token, or it won't be available in the PostData callback
+            var tokenCopy = token;
+
             // call the server's SRP/AuthStep1 method
             PostData("/Account/Login?handler=AuthStep1", {
                 User: user,
                 AHex: AHex
-            }, token, function (data)
+            }, tokenCopy, $.proxy(function (data)
             {
-                alert($.toJSON(data));
+                // debugging
+                //alert($.toJSON(data));
 
                 // inside the jQuery callback, this points to jqXHR
                 // to restore the original this reference, we use $.proxy(function, this)
@@ -166,24 +170,47 @@ $u.crypto.srp =
                     sHex = data.sHex;
                     BHex = data.bHex;
                     u = hex2bigint(data.uHex);
-                    this.AuthStep2();
+                    this.AuthStep2(user, pass, token, fnSuccess, a, AHex, uniq1, sHex, BHex, u);
                 }
                 else
                 {
                     alert('SRP/AuthStep1 failed: error = ' + data.error);
                 }
-            });
+            }, this));
         }
 
+        // after AuthStep2
+        {
+            // m2 - expected server's proof as computed by the client
+            // m2 = H(A, m1, K)
+            var m2 = this.hex2bigint(this.HHex(
+                AHex +
+                m1Hex +
+                KHex));
 
-        // AuthStep2
+            if (0 == compareTo(m2, m2server))
+            {
+                // the server is trusted
+                $.log('Client says: we trust the server');
+            }
+            else
+            {
+                alert('Client says: we do NOT trust the server');
+                return 1;
+            }
+        }
+
+        return 0;
+    },
+
+    AuthStep2: function (user, pass, token, fnSuccess, a, AHex, uniq1, sHex, BHex, u)
+    {
         var KHex;
         var m1Hex;
         var uniq2;
         var m2server;
-        function AuthStep2()
         {
-            var B = this.hex2bigint(BHex)
+            var B = this.hex2bigint(BHex);
 
             // x - private key derived from password and the salt
             // x = H(s || H(username) || H(P))
@@ -215,50 +242,48 @@ $u.crypto.srp =
             m1Hex = this.bigint2hex(m1);
 
             // call the server's SRP/AuthStep2 method
-            WS("SRP/AuthStep2", {
-                user: user,
-                uniq1: uniq1,
-                m1: m1Hex
-            }, function(result)
+            PostData("/Account/Login?handler=AuthStep2", {
+                User: user,
+                Uniq1: uniq1,
+                m1Hex: m1Hex
+            }, token, $.proxy(function (data)
             {
-                if (0 == result.error)
+                if (data.error == 0)
                 {
-                    with (result)
-                    {
-                        uniq2 = data.uniq2;
+                    // m2server — server's proof that it has the correct key
+                    m2server = this.hex2bigint(data.m2Hex);
 
-                        // m2server - server's proof that it has the correct key
-                        m2server = hex2bigint(data.m2);
-                    }
+                    // verify the server
+                    this.AuthStep3(fnSuccess, data, m2server, AHex, m1Hex, KHex);
                 }
                 else
                 {
                     alert('Failure while calling SRP/AuthStep2');
                 }
-            });
+            }, this));
         }
+    },
 
+    AuthStep3: function (fnSuccess, data, m2server, AHex, m1Hex, KHex)
+    {
+        // m2 - expected server's proof as computed by the client
+        // m2 = H(A, m1, K)
+        var m2 = this.hex2bigint(this.HHex(
+            AHex +
+            m1Hex +
+            KHex));
+
+        if (0 == compareTo(m2, m2server))
         {
-            // m2 - expected server's proof as computed by the client
-            // m2 = H(A, m1, K)
-            var m2 = this.hex2bigint(this.HHex(
-                AHex +
-                m1Hex +
-                KHex));
-
-            if (0 == compareTo(m2, m2server))
-            {
-                // the server is trusted
-                $.log('Client says: we trust the server');
-            }
-            else
-            {
-                alert('Client says: we do NOT trust the server');
-                return 1;
-            }
+            // the server is trusted
+            $.log('Client says: we trust the server');
+            fnSuccess(data);
         }
-
-        return 0;
+        else
+        {
+            alert('Client says: we do NOT trust the server');
+            return 1;
+        }
     },
 
     initialize: function(NHex, gHex, kHex)

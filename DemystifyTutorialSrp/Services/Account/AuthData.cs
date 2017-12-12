@@ -25,5 +25,26 @@ namespace DemystifyTutorialSrp.Services.Account
 				AuthDataList.Add(auth);
 			}
 		}
+
+		public static void Remove(AuthData auth)
+		{
+			lock (AuthDataList)
+			{
+				AuthDataList.Remove(auth);
+			}
+		}
+
+		public static AuthData Find(string user, string uniq)
+		{
+			lock (AuthDataList)
+			{
+				var q =
+					from d in AuthDataList
+					where d.User == user && d.Uniq == uniq
+					select d;
+
+				return q.FirstOrDefault();
+			}
+		}
     }
 }

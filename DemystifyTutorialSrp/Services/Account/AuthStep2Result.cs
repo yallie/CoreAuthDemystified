@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DemystifyTutorialSrp.Services.Account
 {
-    public class AuthStep1Result
+    public class AuthStep2Result
     {
         /// <summary>
         /// Error code (0 = Ok).
@@ -15,21 +15,16 @@ namespace DemystifyTutorialSrp.Services.Account
         /// <summary>
         /// Unique server-side string from Step1.
         /// </summary>
-        public string Uniq1 { get; set; }
+        public string Uniq2 { get; set; }
 
         /// <summary>
-        /// s hexadecimal (Salt).
+        /// m2 hexadecimal.
         /// </summary>
-        public string sHex { get; set; }
+        public string m2Hex { get; set; }
 
         /// <summary>
-        /// B hexadecimal.
+        /// Redirect to page.
         /// </summary>
-        public string BHex { get; set; }
-
-        /// <summary>
-        /// u hexadecimal.
-        /// </summary>
-        public string uHex { get; set; }
+        public string Redirect { get; set; }
     }
 }

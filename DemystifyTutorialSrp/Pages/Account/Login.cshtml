@@ -1,4 +1,7 @@
 ﻿@page
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authentication.Cookies;
+@using System.Security.Claims;
 @using DemystifyTutorialSrp.Services.Account;
 @using srp4net.Helpers;
 @*
@@ -49,6 +52,52 @@
             sHex = sHex,
             BHex = BHex,
             uHex = uHex
+        });
+    }
+
+    public async Task<IActionResult> OnPostAuthStep2([FromBody] AuthStep2 step2)
+    {
+        var authData = AuthData.Find(step2.User, step2.Uniq1);
+        if (authData == null)
+        {
+            return new JsonResult(new AuthStep2Result { Error = 1 });
+        }
+
+        // perform step2 and compute server-side m1
+        Crypto.SRP.AuthStep2(
+            authData.vHex,
+            authData.uHex,
+            authData.AHex,
+            authData.bHex,
+            authData.BHex,
+            out var m1serverHex,
+            out var m2Hex);
+
+        if (m1serverHex == step2.m1Hex)
+        {
+            // from the server's point of view, everything is Ok — the client is authenticated
+            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+            identity.AddClaim(new Claim(ClaimTypes.Name, authData.User)); // lookupUser.UserName
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+        }
+        else
+        {
+            // authentication failed
+            return new JsonResult(new AuthStep2Result { Error = 2 });
+        }
+
+        // cleanup the authentication queue
+        AuthData.Remove(authData);
+
+        // authentication succeeded
+        var uniq2 = DateTime.Now.Ticks.ToString();
+        return new JsonResult(new AuthStep2Result
+        {
+            Error = 0,
+            Uniq2 = uniq2,
+            m2Hex = m2Hex,
+            Redirect = "/Index",
         });
     }
 }
