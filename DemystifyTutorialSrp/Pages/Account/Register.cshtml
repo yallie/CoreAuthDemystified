@@ -17,28 +17,14 @@
             // register the given user
             UserInfoRepository.AddAccount(userInfo);
 
-            // redirect to the main page
-            //return RedirectToPage("/Index");
-            //return Content("{ 'msg': 'Ok' }");
-
-            // return JSON result so that the callback can decide what
+            // return JSON result so that the callback can decide what to do next
             return new JsonResult(new { msg = "Ok", redirect = "/Index" });
-        }
-
-        public IActionResult OnPostAddAccount(string user = null, string s = null, string v = null)
-        {
-            return RedirectToPage();
-        }
-
-        public IActionResult OnGetAddAccount(string user, string s, string v)
-        {
-            return RedirectToPage();
         }
     }
 <h1>Register new user</h1>
 
 @using (Html.BeginForm(FormMethod.Post))
-    {
+{
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="UserName" class="col-md-2 control-label">User name</label>

@@ -45,17 +45,15 @@ function WS(fnServer, data, fnSuccess)
         data: $.toJSON(data),
         dataType: "json",
 
-        success: function(msg)
-        {
+        success: function (msg) {
             fnSuccess(msg.d);
         },
 
-        error: function(xhr, msg, error)
-        {
+        error: function (xhr, msg, error) {
             var err = eval("(" + xhr.responseText + ")");
             $.log(err.Message + "\n" + err.StackTrace);
         }
-    })
+    });
 }
 
 function PostData(localUrl, data, token, complete) {

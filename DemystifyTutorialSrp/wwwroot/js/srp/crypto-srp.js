@@ -42,25 +42,25 @@ $u.crypto.srp =
 
     TestAddAccount: function(username, password, fnSuccess)
     {
-    	alert('username: ' + username + ', password: ' + password);
+        alert('username: ' + username + ', password: ' + password);
 
         // user = H(username)
         var user = this.H("!@#<32}|{_$+)EW:>fWS@@!=39dje%^#$RF']]ew3" + username + "shaSHA@"); // some decorations to prevent attacks like the ones based on rainbow tables...
-    	username = '';
-    	alert('user: ' + user);
+        username = '';
+        alert('user: ' + user);
 
         // pass = H(password)
         var pass = this.H("\":}[\|weFC@de';{{3$$  vdRF2w^5V|\\/.w32" + password + "sshHAA!%"); // some decorations to prevent attacks like the ones based on rainbow tables...
         password = '';
-    	alert('pass: ' + pass);
+        alert('pass: ' + pass);
 
         // s - user's salt
         // s = random number
         var s = randBigInt(this.Nbits, 0);
-    	alert('s: ' + s);
+        alert('s: ' + s);
 
         var shex = this.bigint2hex(s);
-    	alert('shex: ' + shex);
+        alert('shex: ' + shex);
     },
 
     AddAccount: function(username, password, token, fnSuccess)
@@ -112,7 +112,7 @@ $u.crypto.srp =
         PostData("/Account/Register", data, token, fnSuccess);
     },
 
-    Authenticate: function(username, password, fnSuccess)
+    Authenticate: function (username, password, token, fnSuccess)
     {
         // Authenticate an user
         // username = the username entered in the interface
@@ -151,24 +151,26 @@ $u.crypto.srp =
             AHex = this.bigint2hex(A);
 
             // call the server's SRP/AuthStep1 method
-            WS("SRP/AuthStep1", {
-                user: user,
-                A: AHex
-            }, function(result)
+            PostData("/Account/Login?handler=AuthStep1", {
+                User: user,
+                AHex: AHex
+            }, token, function (data)
             {
-                if (0 == result.error)
+                alert($.toJSON(data));
+
+                // inside the jQuery callback, this points to jqXHR
+                // to restore the original this reference, we use $.proxy(function, this)
+                if (data.error == 0)
                 {
-                    with (result)
-                    {
-                        uniq1 = data.uniq1;
-                        sHex = data.s;
-                        BHex = data.B;
-                        u = hex2bigint(data.u);
-                    }
+                    uniq1 = data.uniq1;
+                    sHex = data.sHex;
+                    BHex = data.bHex;
+                    u = hex2bigint(data.uHex);
+                    this.AuthStep2();
                 }
                 else
                 {
-                    alert('SRP/AuthStep1 failed: error = ' + result.error);
+                    alert('SRP/AuthStep1 failed: error = ' + data.error);
                 }
             });
         }
@@ -179,6 +181,7 @@ $u.crypto.srp =
         var m1Hex;
         var uniq2;
         var m2server;
+        function AuthStep2()
         {
             var B = this.hex2bigint(BHex)
 
@@ -283,7 +286,7 @@ $u.crypto.srp =
         $.log("Adding the account");
         this.AddAccount(user, password, function(error, result)
         {
-            if (0 == error)
+            if (0 === error)
             {
                 $.log("The account was successfully added");
             }
@@ -295,7 +298,7 @@ $u.crypto.srp =
 
         $.log("Authenticating...");
         var err = this.Authenticate('user1', 'sameverycomplexpassword');
-        if (0 == err)
+        if (0 === err)
         {
             $.log('Everything went OK. The authentication succeeded.');
         }
@@ -306,4 +309,4 @@ $u.crypto.srp =
 
         $.log("Done");
     }
-}
+};
