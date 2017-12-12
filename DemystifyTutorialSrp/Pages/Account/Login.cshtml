@@ -20,7 +20,7 @@
     public IActionResult OnPostAuthStep1([FromBody] AuthStep1 step1)
     {
         // check if the user exists
-        var error = UserInfoRepository.AuthStep1(step1.User, out var sHex, out var vHex);
+        var error = UserInfoRepository.AuthStep1(step1.User, out var sHex, out var vHex, out var userName);
         if (error != 0)
         {
             return new JsonResult(new AuthStep1Result { Error = error });
@@ -34,6 +34,7 @@
         // save step1 results
         AuthData.Add(new AuthData
         {
+            UserName = userName,
             User = step1.User,
             Uniq = uniq1,
             sHex = sHex,
@@ -77,7 +78,7 @@
         {
             // from the server's point of view, everything is Ok — the client is authenticated
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-            identity.AddClaim(new Claim(ClaimTypes.Name, authData.User)); // lookupUser.UserName
+            identity.AddClaim(new Claim(ClaimTypes.Name, authData.UserName)); // lookupUser.UserName
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
         }
@@ -99,6 +100,12 @@
             m2Hex = m2Hex,
             Redirect = "/Index",
         });
+    }
+
+    public async Task<IActionResult> OnGetLogout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToPage("/Index");
     }
 }
 
@@ -128,7 +135,7 @@
                                 $.find('input#Password')[0].value,
                                 $.find('input[name=\'__RequestVerificationToken\']')[0].value,
                                 function (data) {
-                                    alert('Authenticate returns: ' + $.toJSON(data));
+                                    //alert('Authenticate returns: ' + $.toJSON(data));
                                     if (data.redirect) {
                                         window.location.href = data.redirect;
                                     }

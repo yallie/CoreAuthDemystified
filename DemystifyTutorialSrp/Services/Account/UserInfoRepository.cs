@@ -16,17 +16,19 @@ namespace DemystifyTutorialSrp.Services.Account
             UserInfos[userInfo.UserHex] = userInfo;
         }
 
-        public static int AuthStep1(string user, out string sHex, out string vHex)
+        public static int AuthStep1(string user, out string sHex, out string vHex, out string userName)
         {
             if (UserInfos.TryGetValue(user, out var result))
             {
                 sHex = result.SHex;
                 vHex = result.VHex;
+                userName = result.UserName;
                 return 0;
             }
 
             sHex = null;
             vHex = null;
+            userName = null;
             return 1;
         }
     }

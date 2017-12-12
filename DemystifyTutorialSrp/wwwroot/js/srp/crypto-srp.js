@@ -71,7 +71,7 @@ $u.crypto.srp =
 
         // user = H(username)
         var user = this.H("!@#<32}|{_$+)EW:>fWS@@!=39dje%^#$RF']]ew3" + username + "shaSHA@"); // some decorations to prevent attacks like the ones based on rainbow tables...
-        username = '';
+        //username = '';
 
         // pass = H(password)
         var pass = this.H("\":}[\|weFC@de';{{3$$  vdRF2w^5V|\\/.w32" + password + "sshHAA!%"); // some decorations to prevent attacks like the ones based on rainbow tables...
@@ -99,6 +99,7 @@ $u.crypto.srp =
         var v = powMod(this.g, x, this.N);
 
         var data = {
+            UserName: username,
             UserHex: user,
             SHex: shex,
             VHex: this.bigint2hex(v)

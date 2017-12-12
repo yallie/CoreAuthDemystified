@@ -47,7 +47,7 @@
                                 $.find('input#Password')[0].value,
                                 $.find('input[name=\'__RequestVerificationToken\']')[0].value,
                                 function (data) {
-                                    alert('AddAccount returns: ' + $.toJSON(data));
+                                    //alert('AddAccount returns: ' + $.toJSON(data));
                                     if (data.redirect) {
                                         window.location.href = data.redirect;
                                     }

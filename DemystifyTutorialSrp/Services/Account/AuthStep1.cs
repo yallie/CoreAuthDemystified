@@ -8,6 +8,11 @@ namespace DemystifyTutorialSrp.Services.Account
     public class AuthStep1
     {
         /// <summary>
+        /// User name as entered by the user.
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
         /// Hashed user name.
         /// </summary>
         public string User { get; set; }
