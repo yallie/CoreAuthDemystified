@@ -179,29 +179,6 @@ $u.crypto.srp =
                 }
             }, this));
         }
-
-        // after AuthStep2
-        {
-            // m2 - expected server's proof as computed by the client
-            // m2 = H(A, m1, K)
-            var m2 = this.hex2bigint(this.HHex(
-                AHex +
-                m1Hex +
-                KHex));
-
-            if (0 == compareTo(m2, m2server))
-            {
-                // the server is trusted
-                $.log('Client says: we trust the server');
-            }
-            else
-            {
-                alert('Client says: we do NOT trust the server');
-                return 1;
-            }
-        }
-
-        return 0;
     },
 
     AuthStep2: function (user, pass, token, fnSuccess, a, AHex, uniq1, sHex, BHex, u)
