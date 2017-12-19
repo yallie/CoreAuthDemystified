@@ -11,15 +11,29 @@
 
     module.exports = {
         // Application entry point
-        entry: "./Scripts/main.js",
+        entry: "./Scripts/main.ts",
 
         // Output file
         output: {
             filename: 'script.js',
             path: path.resolve(__dirname, bundleFolder)
         },
+        module: {
+            rules: [
+                {
+                    test: /\.tsx?$/,
+                    loader: "ts-loader",
+                    exclude: /node_modules/,
+                },
+            ]
+        },
+        resolve: {
+            extensions: [".tsx", ".ts", ".js"]
+        },
         plugins: [
             new CleanWebpackPlugin([bundleFolder])
-        ]
+        ],
+        // Include debugging information for the javascript files
+        devtool: "inline-source-map"
     };
 }

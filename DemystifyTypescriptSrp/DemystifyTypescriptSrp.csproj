@@ -4,6 +4,11 @@
     <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
 
+  <!-- Remove the standard TypeScript transpiler -->
+  <PropertyGroup>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove=".gitignore" />
   </ItemGroup>
