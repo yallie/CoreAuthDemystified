@@ -34,7 +34,7 @@ namespace DemystifyTypescriptSrp
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseStaticFiles();
@@ -43,7 +43,7 @@ namespace DemystifyTypescriptSrp
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
