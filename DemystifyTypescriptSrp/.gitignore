@@ -1,0 +1,2 @@
+﻿# exclude webpack-generated files from the git repo
+wwwroot/bundle/

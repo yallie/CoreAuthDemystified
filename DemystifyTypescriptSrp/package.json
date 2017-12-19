@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "name": "typescriptsrp",
+  "private": true,
+  "devDependencies": {
+    "webpack": "^3.10.0",
+    "clean-webpack-plugin": "^0.1.17"
+  },
+  "scripts": {
+    "webpack-script": "webpack"
+  },
+  "-vs-binding": {
+    "BeforeBuild": [
+      "webpack-script"
+    ]
+  }
+}
